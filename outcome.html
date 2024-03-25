@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outcome Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom {
+            background-color: black;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: red !important;
+        }
+
+        .custom-select {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="foto/moneybag.png" alt="Money Tracker Logo" width="30" height="30" class="d-inline-block align-top"> Money Tracker</a>
+            <div class="navbar-text" id="hello-message">
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="main.html">Main</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="income.html">Income</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="outcome.html">Outcome</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutus.html">About Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="mt-4">Welcome to Outcome Form</h2>
+
+        <p>Please provide the following details:</p>
+
+        <form class="mt-3" action="#" method="post" id="outcomeForm">
+            <div class="form-group">
+                <label for="transaction_name">Transaction Name:</label>
+                <input type="text" class="form-control" id="transaction_name" name="transaction_name">
+            </div>
+            <div class="form-group">
+                <label for="transaction_amount">Transaction Amount:</label>
+                <input type="number" class="form-control" id="transaction_amount" name="transaction_amount">
+            </div>
+            <div class="form-group">
+                <label for="transaction_type">Transaction Type:</label>
+                <select class="custom-select" id="transaction_type" name="transaction_type">
+                    <option selected disabled>Select Transaction Type</option>
+                    <option value="Makan">Makan</option>
+                    <option value="Main">Main</option>
+                    <option value="Edukasi">Edukasi</option>
+                    <option value="Belanja">Belanja</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="handleSubmit()">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function handleSubmit() {
+    var transactionName = document.getElementById('transaction_name').value;
+    var transactionAmount = parseFloat(document.getElementById('transaction_amount').value);
+    var transactionType = document.getElementById('transaction_type').value;
+
+    if (transactionName.trim() !== '' && !isNaN(transactionAmount) && transactionType.trim() !== '') {
+        // Save input data to localStorage
+        localStorage.setItem('latestOutcomeName', transactionName);
+        localStorage.setItem('latestOutcomeAmount', transactionAmount);
+        localStorage.setItem('latestOutcomeType', transactionType);
+
+        // Deduct outcome amount from balance
+        var currentBalance = parseFloat(localStorage.getItem('currentBalance')) || 0;
+        currentBalance -= transactionAmount;
+        localStorage.setItem('currentBalance', currentBalance);
+
+        // Create transaction box with outcome class
+        var transactionBox = document.createElement('div');
+        transactionBox.classList.add('transaction-box', 'outcome');
+        transactionBox.innerHTML = '<strong>Transaction Name:</strong> ' + transactionName + '<br>' +
+                                   '<strong>Transaction Amount:</strong> Rp. ' + transactionAmount.toFixed(2) + '<br>' +
+                                   '<strong>Transaction Type:</strong> ' + transactionType;
+        
+        // Append transaction box to the page
+        var transactionHistory = document.getElementById('transactionHistory');
+        if (transactionHistory) {
+            transactionHistory.appendChild(transactionBox);
+        }
+
+        alert('Outcome has been saved!');
+        document.getElementById('transaction_name').value = '';
+        document.getElementById('transaction_amount').value = '';
+        document.getElementById('transaction_type').selectedIndex = 0;
+        window.location.href = 'main.html';
+    } else {
+        alert('Transaction is not complete, please fill out the form!');
+    }
+}
+
+    </script>
+</body>
+</html>
